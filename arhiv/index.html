@@ -3,45 +3,350 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Семейный архив — вход</title>
-<meta name="description" content="Вход в закрытую часть сайта.">
-<meta property="og:title" content="Семейный архив — вход"><meta property="og:description" content="Вход в закрытую часть сайта.">
+<title>Архив</title>
+<meta name="description" content="Архив рода Ступко: документы ЦАМО и РГВИА, пресса, источники по людям, открытые вопросы.">
+<meta property="og:title" content="Архив"><meta property="og:description" content="Архив рода Ступко: документы ЦАМО и РГВИА, пресса, источники по людям, открытые вопросы.">
 <link rel="stylesheet" href="/stupko-ru/css/site.css">
 </head>
-<body class="gate">
+<body class="">
 <script>document.documentElement.classList.add('js');</script>
 <nav class="top"><a class="wm" href="/stupko-ru/">Ступко</a><div class="links"><a href="/stupko-ru/rod/">Род</a><a href="/stupko-ru/lyudi/">Люди</a><a href="/stupko-ru/mesta/">Места</a><a href="/stupko-ru/istorii/">Истории</a><a href="/stupko-ru/albomy/">Альбомы</a><a href="/stupko-ru/arhiv/" class=on>Архив</a></div></nav>
-<main><section class="pg"><div class="ph"><h1>Семейный архив</h1><p class="st">Подробная история рода открывается по личному паролю. Страница расшифровывается в браузере, на сервер пароль не уходит.</p></div>
-<div class="gate-box">
-  <form id="f" autocomplete="off">
-    <label for="pw" style="display:block;font-weight:700;margin-bottom:10px">Пароль</label>
-    <input class="field" id="pw" type="password" autocomplete="current-password" placeholder="три слова и число" required>
-    <div class="err" id="err"></div><div class="bar" id="bar"><i></i></div>
-    <div style="margin-top:18px"><button class="btn" type="submit" id="go">Открыть архив</button></div>
-  </form>
-  <div class="bio"><h2>Что внутри</h2><p>Биографии всех людей рода, 28 фотографий, сканы документов РГВИА и ЦАМО, таблицы находок и ссылки на источники по каждому человеку. Там же — семья Павла сегодня.</p>
-  <h2>Нет пароля</h2><p>Попросите у Павла: <a href="https://t.me/pgstupko">t.me/pgstupko</a>. Архив большой, около 4 МБ, на телефоне открывается несколько секунд.</p></div>
-</div></section>
-<script>
-(function(){
-  var f=document.getElementById('f'),pw=document.getElementById('pw'),err=document.getElementById('err'),bar=document.getElementById('bar'),go=document.getElementById('go');
-  function ub64(s){var b=atob(s),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a;}
-  function b64(a){var s='';a=new Uint8Array(a);for(var i=0;i<a.length;i++)s+=String.fromCharCode(a[i]);return btoa(s);}
-  var dataP=null;function data(){return dataP||(dataP=fetch('/stupko-ru/rod.enc.json',{cache:'force-cache'}).then(function(r){return r.json();}));}
-  async function decrypt(raw,d){var k=await crypto.subtle.importKey('raw',raw,'AES-GCM',false,['decrypt']);var pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:ub64(d.iv)},k,ub64(d.ct));return new TextDecoder().decode(pt);}
-  async function unwrap(p,d){var base=await crypto.subtle.importKey('raw',new TextEncoder().encode(p),'PBKDF2',false,['deriveKey']);
-    for(var i=0;i<d.keys.length;i++){var e=d.keys[i];var kek=await crypto.subtle.deriveKey({name:'PBKDF2',salt:ub64(e.salt),iterations:d.iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
-      try{return await crypto.subtle.decrypt({name:'AES-GCM',iv:ub64(e.iv)},kek,ub64(e.w));}catch(_){}}return null;}
-  async function openWith(raw){var d=await data();var h=await decrypt(raw,d);try{sessionStorage.setItem('stupko_k',b64(raw));}catch(_){}document.open();document.write(h);document.close();}
-  f.addEventListener('submit',async function(ev){ev.preventDefault();err.textContent='';bar.classList.add('on');go.disabled=true;
-    try{var d=await data();var raw=await unwrap(pw.value.trim().toLowerCase().replace(/\s+/g,'-'),d);if(!raw){err.textContent='Пароль не подошёл. Проверьте дефисы и число.';pw.select();}else await openWith(raw);}
-    catch(e){err.textContent='Не удалось открыть: '+(e.message||e);}bar.classList.remove('on');go.disabled=false;});
-  try{var s=sessionStorage.getItem('stupko_k');if(s){bar.classList.add('on');openWith(ub64(s)).catch(function(){bar.classList.remove('on');});}}catch(_){}
-  pw.focus();
-})();
-</script>
-</main>
-<footer class="foot"><div class="fn">Род Ступко</div><div class="fc"><p>Ступко · Березковы · Демченко · Кушнаренко · Гудеренко</p><p>Поставмуки — Мишелевка — Иркутск — Братск — Белград</p><p>Сайт собирает Павел Ступко. Знаете больше или нашли ошибку — <a href="https://t.me/pgstupko">напишите</a>.</p><p class="cr">Иллюстрации нарисованы для этого сайта. Фотографии — из семейного архива. Документы — РГВИА (gwar.mil.ru) и ЦАМО (pamyat-naroda.ru).</p></div></footer>
+<main><section class="pg arhiv"><div class="g2 hd"><h1>Архив</h1><p>Семейный альбом 2022 года, сверенный с документами. Здесь то, что нашли «Память народа», РГВИА и газеты, сканы, источники по каждому человеку и вопросы, которые остались открытыми.</p></div><div class="pi big" style="background-image:url(/stupko-ru/img/ill-arhiv-2400.jpg)"></div><div class="ablk">
+  <h2 class="rv">Что нашли архивы и пресса</h2>
+  <p class="sub rv">Семейный альбом собрали в 2022 году. Альбом сверен с открытыми архивами и газетами в ноябре 2026 года.</p>
+
+  <div class="note accent rv">
+    <h3>Дед в документах войны</h3>
+    <p>«Память народа» хранит три группы документов на Ступко Андрея Григорьевича.
+    Две из них точно о деде: совпадают дата и место рождения.</p>
+    <table>
+      <thead><tr><th style="width:34%">Документ</th><th>Что в нём</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://pamyat-naroda.ru/heroes/kld-card_uchet_officer7072203/">Учётно-послужная картотека офицера, ЦАМО</a><br>
+            <span style="color:var(--ink-2);font-size:13px">карточка № 7072203</span></td>
+            <td>Родился 25.11.1914, село Боготол. Поступил на службу в апреле 1943 года.
+            Младший лейтенант. Ленинградская армия ПВО, 189-й зенитный артиллерийский полк.
+            Служба окончена 20.12.1945. Медаль «За победу над Германией».</td></tr>
+        <tr><td><a href="https://pamyat-naroda.ru/heroes/person-hero91687863/">Наградные документы, 1945</a></td>
+            <td>Младший лейтенант, Ленинградский фронт, 84-я зенитная артиллерийская бригада.
+            Медаль «За победу над Германией» — четыре записи.</td></tr>
+        <tr><td><a href="https://pamyat-naroda.ru/heroes/person-hero51401525/">Именные списки частей</a></td>
+            <td>Младший лейтенант, родился в декабре 1914 года в Боготоле, 84-я бригада (189-й полк).</td></tr>
+        <tr><td>Военно-пересыльный пункт, 1945<br>
+            <span style="color:var(--ink-2);font-size:13px">запись требует проверки</span></td>
+            <td>Ступко (он же Ступка) Андрей Григорьевич. 206-й фронтовой запасной стрелковый полк,
+            4-я воздушная армия, военная комендатура Бойтен. Бойтен — это Силезия, весна 1945 года.
+            База относит запись к деду, но дата рождения в ней не указана.</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Где воевал полк.</strong> <a href="https://ru.wikipedia.org/wiki/189-%D0%B9_%D0%B7%D0%B5%D0%BD%D0%B8%D1%82%D0%BD%D1%8B%D0%B9_%D0%B0%D1%80%D1%82%D0%B8%D0%BB%D0%BB%D0%B5%D1%80%D0%B8%D0%B9%D1%81%D0%BA%D0%B8%D0%B9_%D0%BF%D0%BE%D0%BB%D0%BA">189-й зенитный артиллерийский полк</a> все 900 дней стоял под Ленинградом.
+    Сначала на юго-западных подступах — Горелово, Ропша, Низино. С сентября 1941 года в черте города:
+    Ржевка, Парголово, Пискарёвка, Девяткино. Полк прикрывал прорыв блокады в январе 1943 года
+    и наступление под Красным Селом в январе 1944-го. 18 мая 1944 года его переформировали
+    в 84-ю зенитную артиллерийскую бригаду. Дед пришёл в полк в апреле 1943 года — в разгар боёв
+    за Синявинские высоты.</p>
+  </div>
+
+  <div class="note rv">
+    <h3>Дед в газетах</h3>
+    <table>
+      <thead><tr><th style="width:34%">Где</th><th>Что сказано</th></tr></thead>
+      <tbody>
+        <tr><td><a href="http://usolie-citi.ru/arhiv/gazeta-quotusolskie-novostiquot/1279-k-80-letiyu-gazety-leninskiy-put-eto-nashey-usolskoy-istorii-stroki.html">Усольский портал, «К 80-летию газеты „Ленинский путь“»</a><br><a href="http://usolie-citi.ru/news/936-segodnya-den-rossiyskoy-pechati-istoriya-pervoy-usolskom-gazety.html">и «История первой усольской газеты»</a></td>
+            <td>В 1936 году в редакцию пришёл редактор многотиражки завода «Сибфарфор» А. Г. Ступко.
+            Работал ответственным секретарём, потом заместителем редактора.
+            В 1950 году его утвердили заместителем редактора «Восточно-Сибирской правды».</td></tr>
+        <tr><td><a href="https://ru.wikipedia.org/wiki/%D0%92%D0%BE%D1%81%D1%82%D0%BE%D1%87%D0%BD%D0%BE-%D0%A1%D0%B8%D0%B1%D0%B8%D1%80%D1%81%D0%BA%D0%B0%D1%8F_%D0%BF%D1%80%D0%B0%D0%B2%D0%B4%D0%B0">Википедия, статья о «Восточно-Сибирской правде»</a></td>
+            <td>«В послевоенные годы редакторами успешно работали Семён Бройдо и Андрей Ступко».</td></tr>
+        <tr><td><a href="https://my.bsu.ru/content/pbl/publications/publication_193.pdf">«Повелители страниц. 100 лет Восточно-Сибирской правде», БГУ (PDF)</a></td>
+            <td>Та же формула с полными именами: Семён Моисеевич Бройдо и Андрей Григорьевич Ступко.</td></tr>
+        <tr><td><a href="https://www.vsp.ru/2012/06/05/feletonist-s-dobrym-serdtsem-2/">«Восточно-Сибирская правда», 05.06.2012, Александр Гимельштейн «Фельетонист с добрым сердцем»</a></td>
+            <td>В начале 1960-х редактором был Андрей Григорьевич Ступко, его заместителем — Елена Ивановна Яковлева.</td></tr>
+        <tr><td><a href="https://www.vsp.ru/2013/01/14/bratstvo-pera/">«Восточно-Сибирская правда», 14.01.2013, «Братство пера»</a></td>
+            <td>Газета напечатала заметки деда об иркутских писателях. Он написал их в 1980–1984 годах.
+            Публикация вышла с разрешения семьи. Редакция называет годы его работы: заместитель, затем редактор, 1949–1963.</td></tr>
+        <tr><td><a href="https://www.vsp.ru/2017/01/10/vladimir-hodij-ya-vsegda-iskal-neobychnye-temy/">«Восточно-Сибирская правда», 10.01.2017, Владимир Ходий «Я всегда искал необычные темы»</a></td>
+            <td>Редакторы Ступко и Яковлева «вообще поддерживали нас» — о молодых журналистах.</td></tr>
+        <tr><td><a href="https://imenabratska.ru/segodnya-my-prostilis-so-starejshim-zhurnalistom-bratska-evgeniem-urukovym-emu-bylo-83/">«Губерния», Братск, 04.02.2013, Евгений Уруков «С особым чувством к газете» — перепечатка на сайте «Имена Братска»</a></td>
+            <td>Братский журналист вспоминает: в 1962 году Ступко приехал в Тулун, посмотрел подшивку
+            межрайонной газеты, расспросил молодого секретаря о здоровье. Через несколько недель тому пришла
+            по почте путёвка в санаторий «Октябрь» в Евпатории. Это единственная найденная заметка о деде
+            в братской прессе.</td></tr>
+      </tbody>
+    </table>
+    <p>Итог по печати: дед работал в «Восточно-Сибирской правде» с 1950 по 1963 год, из них редактором — с начала 1960-х.
+    До этого — Усолье с 1936 года. Альбом добавляет Тулун, Слюдянку и Нижнеудинск до войны.</p>
+  </div>
+
+  <div class="note accent rv">
+    <h3>Георгиевский крест Семёна Ступки — документ найден</h3>
+    <p>Сводные списки кавалеров Георгиевского креста Патрикеева, том VII, запись № 318389:
+    «СТУПКА Семен Давыдович — 1 стр. полк, ефрейтор. За выдающиеся подвиги храбрости и самоотвержения
+    в боях против неприятеля. Награжден на основании п. 29 ст. 67 Георгиевского Статута».
+    Семья ссылалась на страницу 193, в электронной версии тома это страница 196.</p>
+    <p>Одно расхождение: альбом называет его унтер-офицером, список — ефрейтором.
+    Звание в списке относится к моменту награждения, позже он мог вырасти.</p>
+  </div>
+
+  <div class="note accent rv">
+    <h3>Первая мировая: архив РГВИА открылся</h3>
+    <p>Через сервер в России удалось зайти на gwar.mil.ru — портал «Памяти героев Великой войны».
+    Там нашлись оба прадеда-солдата.</p>
+    <h3 style="margin-top:14px">Андрей Васильевич Березков</h3>
+    <table>
+      <thead><tr><th style="width:34%">Документ</th><th>Что в нём</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://gwar.mil.ru/heroes/chelovek_donesenie15130182/">Именные списки потерь, РГВИА</a><br>
+            <span style="color:var(--ink-2);font-size:13px">донесение 15130182, лист 6 из 48, строка 18</span></td>
+            <td>Стрелок 17-го Сибирского стрелкового полка. Родился: Иркутская губерния, Иркутск.
+            Пропал без вести под городом Ленчица 3 ноября 1914 года.</td></tr>
+      </tbody>
+    </table>
+    <p>Это Лодзинская операция. 17-й Сибирский полк входил в 5-ю Сибирскую стрелковую дивизию, которую
+    в ноябре 1914 года окружили под Лодзью. Многие «пропавшие без вести» попали в плен. Семья знала
+    конец этой истории: лагерь Гамельн, 23 декабря 1914 года. Теперь известно и начало — Ленчица, 3 ноября.
+    Между двумя датами — семь недель.</p>
+    <h3 style="margin-top:14px">Семён Давидович Ступка</h3>
+    <table>
+      <thead><tr><th style="width:34%">Документ</th><th>Что в нём</th></tr></thead>
+      <tbody>
+        <tr><td><a href="https://gwar.mil.ru/heroes/?last_name=%D0%A1%D1%82%D1%83%D0%BF%D0%BA%D0%B0&first_name=%D0%A1%D0%B5%D0%BC%D0%B5%D0%BD&groups=ptr">Именные списки потерь</a></td>
+            <td>Ефрейтор 1-го стрелкового полка. Ранен у деревни Домброво 13 июля 1915 года.
+            Родина: Полтавская губерния, Лохвицкий уезд, Вороньковская волость.</td></tr>
+        <tr><td><a href="https://gwar.mil.ru/heroes/chelovek_nagrazhdenie35191374/">Списки награждённых, РГВИА, дело 1922</a><br>
+            <span style="color:var(--ink-2);font-size:13px">документ 255, лист 422 из 782</span></td>
+            <td>Георгиевская медаль IV степени № 472157. Старший унтер-офицер 1-го стрелкового полка.
+            Вручена 18 декабря 1915 года.</td></tr>
+        <tr><td>Именные списки потерь</td>
+            <td>Ранен под Двинском 20 октября и повторно 2 ноября 1915 года. Во втором списке — уже старший унтер-офицер.</td></tr>
+        <tr><td><a href="https://gwar.mil.ru/heroes/chelovek_gospital20654423/">Уведомление о приёме раненого, форма А</a><br>
+            <span style="color:var(--ink-2);font-size:13px">Всероссийский союз городов, Петроград, журнал № 4657</span></td>
+            <td>Ступка Семён Давидович, 27 лет, малоросс, православный, на службе с 1912 года.
+            Старший унтер-офицер 1-го стрелкового полка. Село Поставмуки. До войны — хлебопашец.
+            Ранен 2 ноября 1915 под Двинском. Принят в городские лазареты № 146 и 151 в Петрограде 13 ноября 1915 года.</td></tr>
+      </tbody>
+    </table>
+    <div class="docs">
+      <figure><img src="/stupko-ru/img/doc_berezkov-1600.jpg" alt="Именной список потерь 17-го Сибирского стрелкового полка, строка 18 — Березков Андрей Васильевич">
+        <figcaption>Именной список потерь, лист 6, строка 18: «Березковъ Андрей Васильевичъ … г. Иркутскъ». <a href="https://gwar.mil.ru/heroes/chelovek_donesenie15130182/">Открыть на gwar.mil.ru</a></figcaption></figure>
+      <figure><img src="/stupko-ru/img/doc_card-1600.jpg" alt="Уведомление о приёме раненого Ступки Семёна Давидовича, Петроград, 13 ноября 1915">
+        <figcaption>Уведомление о приёме раненого, форма А. Петроград, 13 ноября 1915 года. <a href="https://gwar.mil.ru/heroes/chelovek_gospital20654423/">Открыть на gwar.mil.ru</a></figcaption></figure>
+      <figure><img src="/stupko-ru/img/doc_medal-1600.jpg" alt="Список награждённых Георгиевской медалью IV степени, лист 422, строка Ступки">
+        <figcaption>Список награждённых, лист 422: «1-го стрѣлковаго полка ст. ун.-оф. Семенъ Давидовичъ СТУПКА — № 472157». <a href="https://gwar.mil.ru/heroes/chelovek_nagrazhdenie35191374/">Открыть</a></figcaption></figure>
+      <figure><img src="/stupko-ru/img/doc_cross-1600.jpg" alt="Переписка о награждении, лист 1225, строка Ступки">
+        <figcaption>Переписка о награждении, фонд 970, лист 1225: та же строка с № 472157. <a href="https://gwar.mil.ru/heroes/chelovek_nagrazhdenie35437534/">Открыть</a></figcaption></figure>
+    </div>
+    <p>Карта снимает спор о звании. В июле 1915 года он ефрейтор, в ноябре — старший унтер-офицер.
+    Семья помнила верно. Возраст 27 лет в 1915 году подтверждает год рождения — 1888.
+    Портал относит к нему и <a href="https://gwar.mil.ru/heroes/chelovek_nagrazhdenie35437534/">запись о Георгиевском кресте IV степени</a>, но с номером медали;
+    номер креста — № 318389 — остаётся по Патрикееву.</p>
+    <p>Последний след, который помнила семья, — лазарет в Екатеринбурге. Теперь перед ним стоит Петроград,
+    ноябрь 1915 года. Что было после — по-прежнему неизвестно.</p>
+    <p>Прадед Григорий Давыдович в этих базах не значится. Зато есть ещё один земляк —
+    <a href="https://gwar.mil.ru/heroes/?last_name=%D0%A1%D1%82%D1%83%D0%BF%D0%BA%D0%B0&first_name=%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%B8%D0%B9"><strong>Ступка Григорий Александрович</strong></a> из той же Вороньковской волости, 4-й Заамурский полк,
+    ранен в августе 1916 года. Вероятно, родственник.</p>
+  </div>
+
+  <div class="note rv">
+    <h3>Полтавский след подтвердился дважды</h3>
+    <p>Фамилию искали по «Памяти народа» ещё до того, как нашёлся альбом. Самый плотный кластер из 1 887 документов —
+    Чернухинский район Полтавской области. Поставмуки стоят ровно там.</p>
+    <p>Второе совпадение точнее. В той же базе есть ещё один <a href="https://pamyat-naroda.ru/heroes/person-hero10927562/"><strong>Ступко Андрей Григорьевич</strong></a> —
+    из села Пеставмуки Чернухинского района, 113-я стрелковая дивизия, пропал без вести в октябре 1943 года.
+    Полный тёзка деда из того же села. Скорее всего, это сын двоюродного или родного брата прадеда,
+    оставшегося на Украине. Это ветвь рода, о которой альбом не знает.</p>
+  </div>
+
+  <div class="note warn rv">
+    <h3>Фёдор Григорьевич пока не найден</h3>
+    <p>«Память народа» проверена по обоим написаниям — <a href="https://pamyat-naroda.ru/heroes/?last_name=%D0%A1%D1%82%D1%83%D0%BF%D0%BA%D0%BE&first_name=%D0%A4%D0%B5%D0%B4%D0%BE%D1%80&middle_name=%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D1%8C%D0%B5%D0%B2%D0%B8%D1%87&group=all">Ступко</a> и <a href="https://pamyat-naroda.ru/heroes/?last_name=%D0%A1%D1%82%D1%83%D0%BF%D0%BA%D0%B0&first_name=%D0%A4%D0%B5%D0%B4%D0%BE%D1%80&middle_name=%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D1%8C%D0%B5%D0%B2%D0%B8%D1%87&group=all">Ступка</a>. На первых страницах выдачи
+    нет человека 1909 года рождения из Поставмук или Нарыма. Выдача большая: 92 документа на Ступко Фёдора
+    и 290 на Ступку Фёдора. Её нужно пройти до конца с фильтром «Погибшие и пропавшие без вести».</p>
+    <p>Куда идти дальше: <a href="https://bessmertnybarak.com/books/Kniga_pamyati_Tomskoy_oblasti_2/page-1/">Книга памяти Томской области</a>, том по Колпашевскому району; ОБД «Мемориал»
+    по призыву Колпашевским РВК в июле 1942 года; список на памятнике в Чажемто, номер 52.
+    В 1942 году Колпашевский район входил в Новосибирскую область — искать надо и по ней.</p>
+  </div>
+
+  <div class="note rv">
+    <h3>Родители и Братск</h3>
+    <p>Открытые базы ничего не знают о жизни Геннадия Андреевича и Светланы Васильевны в Братске.
+    Это нормально: они не воевали и не были публичными людьми. Отец умер в 1999 году, мать — в 2011 или 2012. Поиск по живым людям в интернете не ведётся.</p>
+    <p>Что даст их историю. Трудовые книжки и личные дела на предприятиях — они лежат либо дома,
+    либо в архиве города Братска. Запись о браке — в ЗАГС Иркутска, по годам между 1965 и 1978.
+    Братские газеты тех лет — «Красное знамя» и «Огни Ангары» — не оцифрованы, подшивки хранит
+    Центральная библиотека Братска. И главное — расспросить родных, кто их помнит.</p>
+    <p>Один след в братской печати уже есть: статья Евгения Урукова о деде в «Губернии» 2013 года.
+    Её автор 38 лет проработал в братской газете «Знамя» и, возможно, знал семью.</p>
+  </div>
+
+  <div class="note rv">
+    <h3>Одна деталь о фамилии</h3>
+    <p>На Полтавщине род звался <strong>Ступка</strong>. В документах так и записаны
+    Давид Петрович и Семён Давыдович. В Сибири фамилия превратилась в <strong>Ступко</strong>.
+    Даже у деда в «Памяти народа» одна запись идёт как «Ступка». При поиске в архивах нужно проверять оба написания.</p>
+  </div>
+
+  <div class="note warn rv">
+    <h3>Что не открылось</h3>
+    <ul>
+      <li><strong>vsp.ru</strong> и <strong>Иркипедия</strong> не отвечают и из России — сайты лежат, это не блокировка.
+      Статьи о деде восстановлены по поисковым выдержкам. Повторить через неделю.</li>
+      <li><strong>НЭБ</strong>. По имени деда — только патенты однофамильца. Номера «Восточки» 1950-х в полнотекстовый
+      поиск не попали.</li>
+      <li><strong>Книга памяти Томской области</strong> в PDF — сервер не ответил.</li>
+    </ul>
+  </div>
+
+  <div class="note warn rv">
+    <h3>Что осталось открытым</h3>
+    <ul>
+      <li><strong>Где погиб Фёдор Григорьевич.</strong> Маршрут описан выше.</li>
+      <li><strong>Девичья фамилия Татьяны Максимовны.</strong> Её сестра — Мария Максимовна Китова, она же Титова.</li>
+      <li><strong>Откуда в Белоруссии приехал Василий Сергеевич</strong> и почему Гудеренко стали Березковыми.</li>
+      <li><strong>Судьба Семёна Давыдовича</strong> после 1917 года. Цепочка теперь: Петроград, ноябрь 1915 → Екатеринбург → тишина.</li>
+      <li><strong>Даты Давида Петровича</strong> и имя его жены.</li>
+      <li><strong>Украинская ветвь:</strong> тёзка деда из Пеставмук, 113-я дивизия. Его донесение о потерях
+      назовёт имя жены или матери — это выход на семью, оставшуюся на Полтавщине.</li>
+      <li><strong>Материнская линия.</strong> Серебрякова Антонина Павловна, 13 марта 1913 или 1914 года,
+      Иркутская область. Павел помнит два варианта места: Ново-Ленино или деревня на «К».</li>
+    </ul>
+  </div>
+</div>
+
+<div class="ablk">
+  <h2 class="rv">Источники по людям</h2>
+  <p class="sub rv">Что о каждом известно не из семейной памяти, а из документов и публикаций. Ссылки ведут на первоисточник.</p>
+
+  <div class="note src rv">
+    <h3>Ступко Павел Геннадьевич · 1978, Братск</h3>
+    <ul>
+      <li><a href="https://iteal.ru/team/">iteal.ru/team</a> — «Лидер якорного круга, навигатор проектов и архитектор 1С». Фото там же.</li>
+      <li><a href="https://t.me/pgstupko">t.me/pgstupko</a> — «Поддержка бизнеса в 1С с AI, owner iTeal.ru, driver 1С AI Club, 1Ci People Serbia, муж, отец 3 детей».</li>
+      <li><a href="https://t.me/OneCAIClub">1C AI Club</a> — сообщество на 1 459 участников, драйвер клуба — @pgstupko. Страница клуба: <a href="https://iteal.ru/1c-ai-club/">iteal.ru/1c-ai-club</a>.</li>
+      <li><a href="https://t.me/Serbija1Ci">1Ci People Serbia</a> — сообщество 1С-специалистов в Сербии.</li>
+      <li>Семейный архив (Google Drive, папка Home): школьный выпуск 1995, Братск; фото 2021–2025.</li>
+    </ul>
+  </div>
+
+  <div class="note src rv">
+    <h3>Ступко Екатерина Евгеньевна</h3>
+    <ul>
+      <li><a href="https://t.me/e_stupko">t.me/e_stupko</a> — «Психолог, семейный консультант».</li>
+      <li><a href="https://t.me/semeiniky">Канал «Ваша мать пришла в сознание»</a> — «Через тернии эго к звёздам осознанного родительства. Автор — психолог, семейный консультант Екатерина Ступко».</li>
+      <li><a href="https://t.me/alfabelgrade">Группа поддержки родителей в Белграде</a>.</li>
+      <li>Instagram @ekaterina_stupko — по словам Павла, почти не ведётся.</li>
+      <li>Семейный архив: фото 2021–2025.</li>
+    </ul>
+  </div>
+
+  <div class="note src rv">
+    <h3>Савелий, Антонина, Илья</h3>
+    <ul>
+      <li>Только семейный архив: презентация «Проект Счастливая Семья», декабрь 2022, и фотографии оттуда.</li>
+      <li>Соцсети детей не искали и искать не будут: на сайте о них только имена.</li>
+    </ul>
+  </div>
+
+  <div class="note src rv">
+    <h3>Ступко Геннадий Андреевич · 1941–1999; Ступко (Серебрякова) Светлана Васильевна · 1944–2011/2012</h3>
+    <ul>
+      <li>Семейный альбом 2022: Геннадий на фото «Семья Ступко» (стоит слева).</li>
+      <li>Годы смерти — со слов Павла; год смерти матери уточняется. Открытых публикаций не найдено, маршрут через документы описан выше.</li>
+    </ul>
+  </div>
+
+  <div class="note src rv">
+    <h3>Ступко Андрей Григорьевич · 1914–1984</h3>
+    <ul>
+      <li>«Память народа»: <a href="https://pamyat-naroda.ru/heroes/kld-card_uchet_officer7072203/">учётно-послужная карточка офицера</a>, <a href="https://pamyat-naroda.ru/heroes/person-hero91687863/">наградные документы 1945</a>, <a href="https://pamyat-naroda.ru/heroes/person-hero51401525/">именные списки 84-й бригады</a>.</li>
+      <li><a href="https://ru.wikipedia.org/wiki/%D0%92%D0%BE%D1%81%D1%82%D0%BE%D1%87%D0%BD%D0%BE-%D0%A1%D0%B8%D0%B1%D0%B8%D1%80%D1%81%D0%BA%D0%B0%D1%8F_%D0%BF%D1%80%D0%B0%D0%B2%D0%B4%D0%B0">Википедия: «Восточно-Сибирская правда»</a> и <a href="https://my.bsu.ru/content/pbl/publications/publication_193.pdf">«Повелители страниц», БГУ</a> — редактор послевоенных лет.</li>
+      <li>vsp.ru: <a href="https://www.vsp.ru/2006/01/12/ozaryonnoe-veroj-i-sovestyu/">12.01.2006</a>, <a href="https://www.vsp.ru/2012/06/05/feletonist-s-dobrym-serdtsem-2/">05.06.2012</a>, <a href="https://www.vsp.ru/2013/01/14/bratstvo-pera/">14.01.2013 «Братство пера»</a>, <a href="https://www.vsp.ru/2015/01/27/pospeshaj-medlenno">27.01.2015</a>, <a href="https://www.vsp.ru/2017/01/10/vladimir-hodij-ya-vsegda-iskal-neobychnye-temy/">10.01.2017</a>.</li>
+      <li><a href="http://usolie-citi.ru/arhiv/gazeta-quotusolskie-novostiquot/1279-k-80-letiyu-gazety-leninskiy-put-eto-nashey-usolskoy-istorii-stroki.html">Усолье: «Ленинский путь», 1936</a>; <a href="https://imenabratska.ru/segodnya-my-prostilis-so-starejshim-zhurnalistom-bratska-evgeniem-urukovym-emu-bylo-83/">Братск: Уруков, «Губерния», 2013</a>.</li>
+    </ul>
+  </div>
+
+  <div class="note src rv">
+    <h3>Ступко (Березкова) Валентина Андреевна · 1915–2005</h3>
+    <ul>
+      <li>Семейный альбом: метрическая запись Хайтинской Николаевской церкви 1915 года (ГАИО), фото Мишелевки.</li>
+      <li>Открытых документов онлайн нет. <a href="https://www.ogirk.ru/2017/04/26/mishelevka-rodina-sibirskogo-farfora/">«Мишелевка — родина сибирского фарфора», ОГ Иркутск, 2017</a> — о заводе, без имён семьи.</li>
+    </ul>
+  </div>
+
+  <div class="note src rv">
+    <h3>Ступко Григорий Давыдович · 1882–1962 и Екатерина Ивановна · 1885–1966</h3>
+    <ul>
+      <li>Семейный альбом: фото в Глинске 1911–12, заводская лаборатория, памятник.</li>
+      <li>gwar.mil.ru: <a href="https://gwar.mil.ru/heroes/?last_name=%D0%A1%D1%82%D1%83%D0%BF%D0%BA%D0%B0&first_name=%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%B8%D0%B9">в списках Первой мировой не значится</a>.</li>
+      <li><a href="https://www.bogotol-lib.ru/UserFiles/memory.pdf">Книга памяти Боготола (PDF)</a> — фамилии нет.</li>
+    </ul>
+  </div>
+
+  <div class="note src rv">
+    <h3>Ступка Семён Давыдович · 1888</h3>
+    <ul>
+      <li>gwar.mil.ru: <a href="https://gwar.mil.ru/heroes/chelovek_nagrazhdenie35191374/">медаль № 472157</a>, <a href="https://gwar.mil.ru/heroes/chelovek_gospital20654423/">лазаретная карта</a>, <a href="https://gwar.mil.ru/heroes/chelovek_nagrazhdenie35437534/">переписка о награждении</a>, <a href="https://gwar.mil.ru/heroes/?last_name=%D0%A1%D1%82%D1%83%D0%BF%D0%BA%D0%B0&first_name=%D0%A1%D0%B5%D0%BC%D0%B5%D0%BD">все 9 документов</a>.</li>
+      <li>С. Б. Патрикеев, «Сводные списки кавалеров Георгиевского креста 1914–1922», т. VII, с. 196, № 318389.</li>
+    </ul>
+  </div>
+
+  <div class="note src rv">
+    <h3>Березков Андрей Васильевич · ?–1914</h3>
+    <ul>
+      <li>gwar.mil.ru: <a href="https://gwar.mil.ru/heroes/chelovek_donesenie15130182/">именной список потерь 17-го Сибирского стрелкового полка</a>.</li>
+      <li>Семейный альбом: фото 1911 года с женой и сыном; дата смерти в плену 23.12.1914, лагерь Гамельн.</li>
+    </ul>
+  </div>
+
+  <div class="note src rv">
+    <h3>Ступко Фёдор Григорьевич · 1909–1942 · и Березков Сергей Васильевич · 1888–1965</h3>
+    <ul>
+      <li>Фёдор: «Память народа» — <a href="https://pamyat-naroda.ru/heroes/?last_name=%D0%A1%D1%82%D1%83%D0%BF%D0%BA%D0%BE&first_name=%D0%A4%D0%B5%D0%B4%D0%BE%D1%80&middle_name=%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D1%8C%D0%B5%D0%B2%D0%B8%D1%87&group=all">Ступко</a> / <a href="https://pamyat-naroda.ru/heroes/?last_name=%D0%A1%D1%82%D1%83%D0%BF%D0%BA%D0%B0&first_name=%D0%A4%D0%B5%D0%B4%D0%BE%D1%80&middle_name=%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D1%8C%D0%B5%D0%B2%D0%B8%D1%87&group=all">Ступка</a>, пока не найден; <a href="https://bessmertnybarak.com/books/Kniga_pamyati_Tomskoy_oblasti_2/page-1/">Книга памяти Томской области</a>.</li>
+      <li>Сергей: <a href="https://ru.openlist.wiki/Special:OlSearch?olsearch-run=1&olsearch-name-fulltext=%D0%91%D0%B5%D1%80%D0%B5%D0%B7%D0%BA%D0%BE%D0%B2+%D0%A1%D0%B5%D1%80%D0%B3%D0%B5%D0%B9">«Открытый список»</a> — не найден по обоим написаниям.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="ablk">
+  <h2 class="rv">Откуда взяты сведения</h2>
+  <table class="rv">
+    <thead><tr><th style="width:34%">Источник</th><th>Что из него взято</th></tr></thead>
+    <tbody>
+      <tr><td><strong>«Род Ступко-Березковых»</strong><br>семейная презентация, 14 июля 2022</td>
+        <td>Схема рода, биографии, все фотографии. Основа этой страницы.</td></tr>
+      <tr><td>Метрическая книга Хайтинской Николаевской церкви</td>
+        <td>Рождение Валентины Андреевны, 1915. Брак Сергея Васильевича, 1918.</td></tr>
+      <tr><td>Метрическая книга Узко-Лугской Троицкой церкви, 1891–1892</td>
+        <td>Единственная запись о Татьяне Максимовне Березковой.</td></tr>
+      <tr><td>Карточка военнопленного, Гамельн</td>
+        <td>Смерть Андрея Васильевича Березкова 23 декабря 1914 года.</td></tr>
+      <tr><td>Сводные списки кавалеров Георгиевского креста, том 7</td>
+        <td>Награда Семёна Давыдовича Ступки.</td></tr>
+      <tr><td>«Память народа», архив Минобороны</td>
+        <td>География фамилии. 1 887 документов, ядро — Полтавщина.</td></tr>
+      <tr><td>«Открытый список»</td>
+        <td>Шесть формуляров Ступко среди жертв репрессий. Связь с родом не установлена.</td></tr>
+      <tr><td>«Память народа»: <a href="https://pamyat-naroda.ru/heroes/person-hero91687863/">91687863</a>, <a href="https://pamyat-naroda.ru/heroes/person-hero51401525/">51401525</a>, <a href="https://pamyat-naroda.ru/heroes/person-hero10927562/">10927562</a></td>
+        <td>Служба деда: 189-й зенап, 84-я зенабр, 206-й фзсп. Тёзка из Пеставмук, 113-я сд.</td></tr>
+      <tr><td>gwar.mil.ru, РГВИА: <a href="https://gwar.mil.ru/heroes/chelovek_donesenie15130182/">донесение 15130182</a>; <a href="https://gwar.mil.ru/heroes/chelovek_nagrazhdenie35191374/">награждение 35191374</a>; <a href="https://gwar.mil.ru/heroes/chelovek_gospital20654423/">лазаретная карта 20654423</a></td>
+        <td>Плен Андрея Березкова под Ленчицей; медаль, ранения и лазарет Семёна Ступки.</td></tr>
+      <tr><td>С. Б. Патрикеев. Сводные списки кавалеров Георгиевского креста, т. VII</td>
+        <td>Запись № 318389 о Семёне Давыдовиче Ступке.</td></tr>
+      <tr><td><a href="https://ru.wikipedia.org/wiki/189-%D0%B9_%D0%B7%D0%B5%D0%BD%D0%B8%D1%82%D0%BD%D1%8B%D0%B9_%D0%B0%D1%80%D1%82%D0%B8%D0%BB%D0%BB%D0%B5%D1%80%D0%B8%D0%B9%D1%81%D0%BA%D0%B8%D0%B9_%D0%BF%D0%BE%D0%BB%D0%BA">Википедия, «189-й зенитный артиллерийский полк»</a></td>
+        <td>Боевой путь полка под Ленинградом.</td></tr>
+      <tr><td>vsp.ru: <a href="https://www.vsp.ru/2006/01/12/ozaryonnoe-veroj-i-sovestyu/">2006</a>, <a href="https://www.vsp.ru/2012/06/05/feletonist-s-dobrym-serdtsem-2/">2012</a>, <a href="https://www.vsp.ru/2013/01/14/bratstvo-pera/">2013</a>, <a href="https://www.vsp.ru/2015/01/27/pospeshaj-medlenno">2015</a>, <a href="https://www.vsp.ru/2017/01/10/vladimir-hodij-ya-vsegda-iskal-neobychnye-temy/">2017</a></td>
+        <td>Годы редакторства деда, его заметки «Братство пера», воспоминания коллег.</td></tr>
+      <tr><td><a href="https://imenabratska.ru/segodnya-my-prostilis-so-starejshim-zhurnalistom-bratska-evgeniem-urukovym-emu-bylo-83/">imenabratska.ru, «Губерния» 04.02.2013, Евгений Уруков</a></td>
+        <td>Встреча с дедом в Тулуне в 1962 году.</td></tr>
+      <tr><td><a href="http://usolie-citi.ru/arhiv/gazeta-quotusolskie-novostiquot/1279-k-80-letiyu-gazety-leninskiy-put-eto-nashey-usolskoy-istorii-stroki.html">usolie-citi.ru, история газеты «Ленинский путь»</a></td>
+        <td>1936 год: дед пришёл в усольскую газету из многотиражки «Сибфарфора».</td></tr>
+      <tr><td>Павел Ступко</td>
+        <td>Данные родителей, бабушки по матери, жены и детей; семейные фото с Google Drive.</td></tr>
+    </tbody>
+  </table>
+</div>
+</section></main>
+<footer class="foot"><div class="fn">Род Ступко</div><div class="fc"><p>Ступко · Березковы · Демченко · Кушнаренко · Гудеренко</p><p>Поставмуки — Мишелевка — Иркутск — Братск — Москва — Фетхие — Белград</p><p>Сайт собирает Павел Ступко. Знаете больше или нашли ошибку — <a href="https://t.me/pgstupko">напишите</a>.</p><p class="cr">Иллюстрации нарисованы для этого сайта. Фотографии — из семейного архива. Документы — РГВИА (gwar.mil.ru) и ЦАМО (pamyat-naroda.ru).</p></div></footer>
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Просмотр фотографии"><span class="lbcnt" id="lbcnt"></span><button class="lbx" type="button" aria-label="Закрыть">×</button><button class="lbp" type="button" aria-label="Предыдущая">‹</button><img id="lbimg" alt=""><div class="lbcap" id="lbcap"></div><button class="lbn" type="button" aria-label="Следующая">›</button></div>
 <script src="/stupko-ru/js/site.js"></script>
 </body>

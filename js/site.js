@@ -11,7 +11,7 @@
   setTimeout(function(){els.forEach(function(e){e.classList.add('on');});},2500);
 
   /* лайтбокс */
-  var imgs=Array.prototype.slice.call(document.querySelectorAll('.card img, .gal img, .pf img, .fig img, .story .cover'));
+  var imgs=Array.prototype.slice.call(document.querySelectorAll('.card img, .gal img, .pf img, .fig img, .story .cover, .docs img'));
   var lb=document.getElementById('lb'); if(lb&&imgs.length){
     var im=document.getElementById('lbimg'),cap=document.getElementById('lbcap'),cnt=document.getElementById('lbcnt'),cur=-1,last=null;
     function capOf(img){var f=img.closest('figure');var fc=f&&f.querySelector('figcaption');if(fc)return fc.innerHTML;var c=img.closest('.card');if(c)return c.querySelector('b').textContent;return img.alt||'';}

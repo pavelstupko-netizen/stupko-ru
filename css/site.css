@@ -183,3 +183,24 @@ body.lb-open{overflow:hidden}
 @keyframes slide{0%{transform:translateX(-120%)}100%{transform:translateX(400%)}}
 .gate button.btn{border:0;cursor:pointer;font-family:inherit}
 @media (max-width:820px){.gate .gate-box{grid-template-columns:1fr;row-gap:24px}}
+
+/* ─── архив ─── */
+.arhiv .ablk{margin-top:clamp(56px,7vw,110px)}
+.arhiv .ablk>h2{font-size:var(--d2);line-height:1.08;letter-spacing:-.01em;margin:0 0 8px;max-width:20ch}
+.arhiv .sub{font-size:20px;color:var(--ink-2);margin:0 0 28px;max-width:62ch}
+.arhiv h3{font-size:var(--d3);line-height:1.2;margin:0 0 10px}
+.note{background:var(--field);padding:clamp(20px,2.6vw,36px);margin:0 0 18px}
+.note.accent{background:var(--field-2)}
+.note.warn{background:var(--surface);box-shadow:inset 8px 0 0 var(--clay)}
+.note p{margin:0 0 12px;max-width:72ch}.note p:last-child{margin-bottom:0}
+.note ul{margin:0;padding-left:22px}.note li{margin:0 0 8px;max-width:70ch}
+.arhiv table{width:100%;border-collapse:collapse;font-size:16px;margin:12px 0 18px;background:var(--surface)}
+.arhiv th{text-align:left;font-size:13px;font-weight:700;color:var(--ink-2);padding:10px 14px;border-bottom:2px solid var(--ink)}
+.arhiv td{padding:12px 14px;border-bottom:1px solid var(--field);vertical-align:top}
+.arhiv td span{color:var(--ink-2)}
+.docs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--gap);margin:18px 0}
+.docs figure{margin:0;background:var(--surface);padding:10px}
+.docs img{width:100%;cursor:zoom-in}
+.docs figcaption{font-size:14px;color:var(--ink-2);margin-top:8px;line-height:1.4}
+.arhiv a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+@media (max-width:820px){.arhiv table,.arhiv thead,.arhiv tbody,.arhiv tr,.arhiv td,.arhiv th{display:block}.arhiv th{display:none}.arhiv td{padding:8px 12px}.arhiv tr{border-bottom:2px solid var(--field);padding:4px 0}}
