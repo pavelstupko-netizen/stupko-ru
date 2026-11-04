@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Семейный архив — вход</title>
+<meta name="description" content="Вход в закрытую часть сайта.">
+<meta property="og:title" content="Семейный архив — вход"><meta property="og:description" content="Вход в закрытую часть сайта.">
+<link rel="stylesheet" href="/css/site.css">
+</head>
+<body class="gate">
+<script>document.documentElement.classList.add('js');</script>
+<nav class="top"><a class="wm" href="/">Ступко</a><div class="links"><a href="/rod/">Род</a><a href="/lyudi/">Люди</a><a href="/mesta/">Места</a><a href="/istorii/">Истории</a><a href="/albomy/">Альбомы</a><a href="/arhiv/" class=on>Архив</a></div></nav>
+<main><section class="pg"><div class="ph"><h1>Семейный архив</h1><p class="st">Подробная история рода открывается по личному паролю. Страница расшифровывается в браузере, на сервер пароль не уходит.</p></div>
+<div class="gate-box">
+  <form id="f" autocomplete="off">
+    <label for="pw" style="display:block;font-weight:700;margin-bottom:10px">Пароль</label>
+    <input class="field" id="pw" type="password" autocomplete="current-password" placeholder="три слова и число" required>
+    <div class="err" id="err"></div><div class="bar" id="bar"><i></i></div>
+    <div style="margin-top:18px"><button class="btn" type="submit" id="go">Открыть архив</button></div>
+  </form>
+  <div class="bio"><h2>Что внутри</h2><p>Биографии всех людей рода, 28 фотографий, сканы документов РГВИА и ЦАМО, таблицы находок и ссылки на источники по каждому человеку. Там же — семья Павла сегодня.</p>
+  <h2>Нет пароля</h2><p>Попросите у Павла: <a href="https://t.me/pgstupko">t.me/pgstupko</a>. Архив большой, около 4 МБ, на телефоне открывается несколько секунд.</p></div>
+</div></section>
+<script>
+(function(){
+  var f=document.getElementById('f'),pw=document.getElementById('pw'),err=document.getElementById('err'),bar=document.getElementById('bar'),go=document.getElementById('go');
+  function ub64(s){var b=atob(s),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a;}
+  function b64(a){var s='';a=new Uint8Array(a);for(var i=0;i<a.length;i++)s+=String.fromCharCode(a[i]);return btoa(s);}
+  var dataP=null;function data(){return dataP||(dataP=fetch('/rod.enc.json',{cache:'force-cache'}).then(function(r){return r.json();}));}
+  async function decrypt(raw,d){var k=await crypto.subtle.importKey('raw',raw,'AES-GCM',false,['decrypt']);var pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:ub64(d.iv)},k,ub64(d.ct));return new TextDecoder().decode(pt);}
+  async function unwrap(p,d){var base=await crypto.subtle.importKey('raw',new TextEncoder().encode(p),'PBKDF2',false,['deriveKey']);
+    for(var i=0;i<d.keys.length;i++){var e=d.keys[i];var kek=await crypto.subtle.deriveKey({name:'PBKDF2',salt:ub64(e.salt),iterations:d.iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+      try{return await crypto.subtle.decrypt({name:'AES-GCM',iv:ub64(e.iv)},kek,ub64(e.w));}catch(_){}}return null;}
+  async function openWith(raw){var d=await data();var h=await decrypt(raw,d);try{sessionStorage.setItem('stupko_k',b64(raw));}catch(_){}document.open();document.write(h);document.close();}
+  f.addEventListener('submit',async function(ev){ev.preventDefault();err.textContent='';bar.classList.add('on');go.disabled=true;
+    try{var d=await data();var raw=await unwrap(pw.value.trim().toLowerCase().replace(/\s+/g,'-'),d);if(!raw){err.textContent='Пароль не подошёл. Проверьте дефисы и число.';pw.select();}else await openWith(raw);}
+    catch(e){err.textContent='Не удалось открыть: '+(e.message||e);}bar.classList.remove('on');go.disabled=false;});
+  try{var s=sessionStorage.getItem('stupko_k');if(s){bar.classList.add('on');openWith(ub64(s)).catch(function(){bar.classList.remove('on');});}}catch(_){}
+  pw.focus();
+})();
+</script>
+</main>
+<footer class="foot"><div class="fn">Род Ступко</div><div class="fc"><p>Ступко · Березковы · Демченко · Кушнаренко · Гудеренко</p><p>Поставмуки — Мишелевка — Иркутск — Братск — Белград</p><p>Сайт собирает Павел Ступко. Знаете больше или нашли ошибку — <a href="https://t.me/pgstupko">напишите</a>.</p><p class="cr">Иллюстрации нарисованы для этого сайта. Фотографии — из семейного архива. Документы — РГВИА (gwar.mil.ru) и ЦАМО (pamyat-naroda.ru).</p></div></footer>
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Просмотр фотографии"><span class="lbcnt" id="lbcnt"></span><button class="lbx" type="button" aria-label="Закрыть">×</button><button class="lbp" type="button" aria-label="Предыдущая">‹</button><img id="lbimg" alt=""><div class="lbcap" id="lbcap"></div><button class="lbn" type="button" aria-label="Следующая">›</button></div>
+<script src="/js/site.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /rod.html
+Disallow: /arhiv/
 Disallow: /rod.enc.json
