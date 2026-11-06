@@ -208,12 +208,13 @@ body.lb-open{overflow:hidden}
 /* живые фотографии: клик — фото начинает двигаться */
 .pf.live{position:relative;cursor:pointer}
 .pf.live video{position:absolute;left:0;top:0;width:100%;height:auto;opacity:0;transition:opacity .9s ease}
-.pf.live.on video{opacity:1}
+.pf.live.playing video{opacity:1}
 .pf.live .lvb{position:absolute;left:12px;bottom:12px;padding:7px 12px;border-radius:999px;background:rgba(20,24,40,.62);color:#fff;font-size:13px;letter-spacing:.02em;backdrop-filter:blur(6px);transition:opacity .5s;pointer-events:none}
 .pf.live .lvb::before{content:"▶";font-size:10px;margin-right:7px}
-.pf.live.on .lvb{opacity:0}
+.pf.live.playing .lvb{opacity:0}
 .card .lv{position:absolute;right:8px;top:8px;padding:3px 8px;border-radius:999px;background:rgba(20,24,40,.6);color:#fff;font-size:11px;font-style:normal;pointer-events:none}
 .card{position:relative}
 .card video{position:absolute;left:0;top:0;width:100%;height:auto;opacity:0;transition:opacity .8s;pointer-events:none}
-.card.on video{opacity:1}
+.card.playing video{opacity:1}
 @media (prefers-reduced-motion: reduce){.pf.live video,.card video{transition:none}}
+.pf.live.cover{margin:0 0 28px}.pf.live.cover img{margin:0}
