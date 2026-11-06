@@ -10,8 +10,25 @@
   } else els.forEach(function(e){e.classList.add('on');});
   setTimeout(function(){els.forEach(function(e){e.classList.add('on');});},2500);
 
+  /* живые фотографии: клик по фото с data-live — поверх появляется видео */
+  function liveOf(img){
+    var box=img.closest('.pf')||img.closest('.card'); if(!box) return null;
+    var v=box.querySelector('video');
+    if(!v){ v=document.createElement('video'); v.muted=true; v.loop=true; v.playsInline=true; v.setAttribute('playsinline',''); v.setAttribute('muted','');
+      v.preload='none'; v.src=img.getAttribute('data-live'); img.insertAdjacentElement('afterend',v); }
+    return {box:box,v:v};
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('img[data-live]'),function(img){
+    img.addEventListener('click',function(e){ e.preventDefault(); e.stopPropagation();
+      var L=liveOf(img); if(!L) return;
+      if(L.box.classList.contains('on')){ L.v.pause(); L.box.classList.remove('on'); return; }
+      L.v.style.height=img.getBoundingClientRect().height+'px';
+      var pr=L.v.play(); L.box.classList.add('on'); if(pr&&pr.catch) pr.catch(function(){L.box.classList.remove('on');});
+    },true);
+  });
+
   /* лайтбокс */
-  var imgs=Array.prototype.slice.call(document.querySelectorAll('.card img, .gal img, .pf img, .fig img, .story .cover, .docs img'));
+  var imgs=Array.prototype.slice.call(document.querySelectorAll('.card img, .gal img, .pf img, .fig img, .story .cover, .docs img')).filter(function(i){return !i.hasAttribute('data-live');});
   var lb=document.getElementById('lb'); if(lb&&imgs.length){
     var im=document.getElementById('lbimg'),cap=document.getElementById('lbcap'),cnt=document.getElementById('lbcnt'),cur=-1,last=null;
     function capOf(img){var f=img.closest('figure');var fc=f&&f.querySelector('figcaption');if(fc)return fc.innerHTML;var c=img.closest('.card');if(c)return c.querySelector('b').textContent;return img.alt||'';}
